@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container py-4">
+        <h2>User Profile</h2>
+        <div th:if="${user != null}">
+            <p><strong>Name:</strong> <span th:text="${user.name}">Name</span></p>
+            <p><strong>Email:</strong> <span th:text="${user.email}">Email</span></p>
+            <p><strong>Role:</strong> <span th:text="${user.role}">Role</span></p>
+        </div>
+        <a href="/dashboard" class="btn btn-secondary mt-3">Back to Dashboard</a>
+    </div>
+</body>
+</html>

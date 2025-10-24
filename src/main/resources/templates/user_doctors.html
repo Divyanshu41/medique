@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctors List</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container py-4">
+        <h2>Doctors List</h2>
+        <div th:if="${doctors != null and #lists.isEmpty(doctors)}">
+            <p>No doctors available.</p>
+        </div>
+        <div th:if="${doctors != null and !#lists.isEmpty(doctors)}">
+            <div class="row">
+                <div class="col-md-4" th:each="doctor : ${doctors}">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 th:text="${doctor.name}">Doctor Name</h5>
+                            <p th:text="${doctor.specialization}">Specialization</p>
+                            <p>Working Hours: <span th:text="${doctor.workingHours}">09:00-17:00</span></p>
+                            <a th:href="@{/user/book-appointment/{id}(id=${doctor.id})}" class="btn btn-primary">Book Appointment</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="/dashboard" class="btn btn-secondary mt-3">Back to Dashboard</a>
+    </div>
+</body>
+</html>

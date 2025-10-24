@@ -1,0 +1,58 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### Logs ###
+logs/
+*.log
+*.gz
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Temporary Files ###
+*.tmp
+*.temp
+*~
+
+### OS Files ###
+.DS_Store
+Thumbs.db
+
+### Documentation (keep only essential) ###
+ALL_FILES_SUMMARY.md
+CHECKLIST.md
+CLEANUP_COMPLETE.md
+FEATURES_COMPLETE.md
+FINAL_STATUS.md
+IMPLEMENTATION_COMPLETE.md
+PAYMENT_COMPLETE_REPORT.md
+VISUAL_FILE_GUIDE.md
+🚀_APPLICATION_STARTED.txt

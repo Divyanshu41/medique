@@ -1,0 +1,509 @@
+/* 
+ * Hospital Appointment System - Enhanced Styles
+ * Includes: Loading indicators, Toast notifications, Mobile responsive
+ */
+
+
+/* ==================== LOADING OVERLAY ==================== */
+
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.loading-spinner {
+    text-align: center;
+    color: white;
+}
+
+.loading-spinner .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3rem;
+}
+
+.loading-message {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: white;
+    margin-top: 1rem;
+}
+
+
+/* ==================== TOAST NOTIFICATIONS ==================== */
+
+.toast {
+    min-width: 250px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease-out;
+}
+
+.toast-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
+/* ==================== DARK MODE SUPPORT ==================== */
+
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --card-bg: #2d2d2d;
+    --border-color: #444;
+}
+
+[data-theme="dark"] body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .table {
+    color: var(--text-color);
+    background-color: var(--card-bg);
+}
+
+[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .btn-outline-primary {
+    color: #4dabf7;
+    border-color: #4dabf7;
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+    background-color: #4dabf7;
+    color: #1a1a1a;
+}
+
+
+/* ==================== DARK MODE TOGGLE ==================== */
+
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.theme-toggle i {
+    font-size: 1.5rem;
+}
+
+
+/* ==================== MOBILE RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+    /* Stack cards vertically */
+    .row>[class*='col-'] {
+        margin-bottom: 1rem;
+    }
+    /* Full-width buttons */
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    /* Smaller text on mobile */
+    h1 {
+        font-size: 1.75rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+    /* Responsive table */
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+    /* Hide less important columns on mobile */
+    .hide-mobile {
+        display: none;
+    }
+    /* Adjust padding */
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    /* Make forms more touch-friendly */
+    .form-control,
+    .form-select {
+        font-size: 16px;
+        /* Prevents zoom on iOS */
+        padding: 12px;
+    }
+    /* Loading overlay adjustments */
+    .loading-spinner .spinner-border {
+        width: 2rem;
+        height: 2rem;
+    }
+    .loading-message {
+        font-size: 0.9rem;
+    }
+    /* Toast on mobile */
+    .toast-container {
+        width: 90% !important;
+        left: 5% !important;
+        right: 5% !important;
+    }
+    /* Navigation adjustments */
+    .navbar-nav {
+        text-align: center;
+    }
+    .navbar-nav .nav-link {
+        padding: 10px 0;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Extra small devices */
+    .card {
+        margin-bottom: 1rem;
+    }
+    .card-body {
+        padding: 1rem;
+    }
+    /* Reduce font sizes */
+    body {
+        font-size: 14px;
+    }
+    h1 {
+        font-size: 1.5rem;
+    }
+    h2 {
+        font-size: 1.25rem;
+    }
+    /* Theme toggle positioning */
+    .theme-toggle {
+        width: 40px;
+        height: 40px;
+        top: 10px;
+        right: 10px;
+    }
+    .theme-toggle i {
+        font-size: 1.2rem;
+    }
+}
+
+
+/* ==================== TABLET RESPONSIVE ==================== */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* Tablet-specific styles */
+    .container {
+        max-width: 95%;
+    }
+    .card {
+        margin-bottom: 1.5rem;
+    }
+    /* Adjust grid for tablets */
+    .col-md-6 {
+        width: 50%;
+    }
+    .col-md-4 {
+        width: 50%;
+    }
+}
+
+
+/* ==================== ACCESSIBILITY IMPROVEMENTS ==================== */
+
+
+/* Focus indicators */
+
+*:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+
+/* Skip to main content */
+
+.skip-to-main {
+    position: absolute;
+    left: -9999px;
+    z-index: 999;
+}
+
+.skip-to-main:focus {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+
+/* High contrast mode support */
+
+@media (prefers-contrast: high) {
+     :root {
+        --border-width: 2px;
+    }
+    .btn,
+    .card,
+    .form-control {
+        border-width: var(--border-width);
+    }
+}
+
+
+/* Reduced motion support */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+
+/* ==================== UTILITY CLASSES ==================== */
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.shadow-hover {
+    transition: box-shadow 0.3s ease;
+}
+
+.shadow-hover:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+
+/* ==================== ANIMATIONS ==================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+
+/* ==================== PRINT STYLES ==================== */
+
+@media print {
+    /* Hide non-printable elements */
+    .no-print,
+    .btn,
+    .navbar,
+    .theme-toggle,
+    #loadingOverlay,
+    .toast-container {
+        display: none !important;
+    }
+    /* Optimize for printing */
+    body {
+        font-size: 12pt;
+        color: black;
+        background: white;
+    }
+    .container {
+        width: 100%;
+        max-width: none;
+    }
+    /* Page breaks */
+    .page-break {
+        page-break-after: always;
+    }
+    /* Links */
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+}
+
+
+/* ==================== PASSWORD STRENGTH INDICATOR ==================== */
+
+#passwordStrength {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+    transition: color 0.3s ease;
+}
+
+.password-requirements {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
+
+.password-requirements ul {
+    margin-bottom: 0;
+    padding-left: 1.5rem;
+}
+
+.password-requirements li {
+    margin-bottom: 0.25rem;
+}
+
+.password-requirements li.met {
+    color: #28a745;
+}
+
+.password-requirements li.met::before {
+    content: "✓ ";
+    font-weight: bold;
+}
+
+
+/* ==================== FORM ENHANCEMENTS ==================== */
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.form-control.is-valid {
+    border-color: #28a745;
+}
+
+
+/* ==================== CARD ENHANCEMENTS ==================== */
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    font-weight: 600;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+
+/* ==================== BADGES ==================== */
+
+.badge {
+    padding: 0.5em 0.75em;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.badge-status-PENDING {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.badge-status-CONFIRMED {
+    background-color: #17a2b8;
+    color: #fff;
+}
+
+.badge-status-COMPLETED {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.badge-status-CANCELLED {
+    background-color: #dc3545;
+    color: #fff;
+}

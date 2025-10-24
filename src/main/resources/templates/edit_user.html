@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit User | Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="bi bi-person-gear"></i> Edit User</h2>
+                    <a th:href="@{/admin/users}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Users
+                    </a>
+                </div>
+
+                <!-- Edit Form Card -->
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-pencil-square"></i> User Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/users/edit/{id}(id=${user.id})}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            
+                            <!-- User ID (Read-only) -->
+                            <div class="mb-3">
+                                <label class="form-label"><i class="bi bi-hash"></i> User ID</label>
+                                <input type="text" class="form-control" th:value="${user.id}" readonly>
+                            </div>
+
+                            <!-- Name -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label">
+                                    <i class="bi bi-person"></i> Full Name <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="name" 
+                                       name="name" 
+                                       th:value="${user.name}" 
+                                       required>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label">
+                                    <i class="bi bi-envelope"></i> Email <span class="text-danger">*</span>
+                                </label>
+                                <input type="email" 
+                                       class="form-control" 
+                                       id="email" 
+                                       name="email" 
+                                       th:value="${user.email}" 
+                                       required>
+                            </div>
+
+                            <!-- Role -->
+                            <div class="mb-3">
+                                <label for="role" class="form-label">
+                                    <i class="bi bi-shield-check"></i> Role <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select" id="role" name="role" required>
+                                    <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">
+                                        🛡️ ADMIN - Full System Access
+                                    </option>
+                                    <option value="DOCTOR" th:selected="${user.role == 'DOCTOR'}">
+                                        💉 DOCTOR - Medical Professional
+                                    </option>
+                                    <option value="PATIENT" th:selected="${user.role == 'PATIENT'}">
+                                        🧑 PATIENT - Regular User
+                                    </option>
+                                </select>
+                                <div class="form-text">
+                                    <strong>⚠️ Important:</strong> Changing role will affect user's access permissions immediately.
+                                </div>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">
+                                    <i class="bi bi-telephone"></i> Phone Number
+                                </label>
+                                <input type="tel" 
+                                       class="form-control" 
+                                       id="phone" 
+                                       name="phone" 
+                                       th:value="${user.phone}"
+                                       placeholder="+91 9999999999">
+                            </div>
+
+                            <!-- Age & Gender (Row) -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="age" class="form-label">
+                                        <i class="bi bi-calendar"></i> Age
+                                    </label>
+                                    <input type="number" 
+                                           class="form-control" 
+                                           id="age" 
+                                           name="age" 
+                                           th:value="${user.age}"
+                                           min="1" 
+                                           max="150">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="gender" class="form-label">
+                                        <i class="bi bi-gender-ambiguous"></i> Gender
+                                    </label>
+                                    <select class="form-select" id="gender" name="gender">
+                                        <option value="">Select Gender</option>
+                                        <option value="MALE" th:selected="${user.gender == 'MALE'}">Male</option>
+                                        <option value="FEMALE" th:selected="${user.gender == 'FEMALE'}">Female</option>
+                                        <option value="OTHER" th:selected="${user.gender == 'OTHER'}">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="mb-3">
+                                <label for="address" class="form-label">
+                                    <i class="bi bi-geo-alt"></i> Address
+                                </label>
+                                <textarea class="form-control" 
+                                          id="address" 
+                                          name="address" 
+                                          rows="3" 
+                                          th:text="${user.address}"
+                                          placeholder="Enter full address"></textarea>
+                            </div>
+
+                            <!-- Active Status -->
+                            <div class="mb-4">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" 
+                                           type="checkbox" 
+                                           id="isActive" 
+                                           name="isActive" 
+                                           th:checked="${user.isActive}"
+                                           value="true">
+                                    <label class="form-check-label" for="isActive">
+                                        <i class="bi bi-toggle-on"></i> <strong>Account Active</strong>
+                                        <span class="text-muted">(Uncheck to disable login)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/admin/users}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Info Card -->
+                <div class="alert alert-info mt-4" role="alert">
+                    <h6 class="alert-heading"><i class="bi bi-info-circle-fill"></i> Important Notes:</h6>
+                    <ul class="mb-0">
+                        <li><strong>Password:</strong> Cannot be changed here. User must use "Forgot Password" to reset.</li>
+                        <li><strong>Email:</strong> Ensure email is unique across all users.</li>
+                        <li><strong>Role Change:</strong> Takes effect immediately after saving.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

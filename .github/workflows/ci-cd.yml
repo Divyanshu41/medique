@@ -1,0 +1,135 @@
+name: Hospital Appointment System CI/CD
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: testpassword
+          MYSQL_DATABASE: test_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v3
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Cache Maven packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Build with Maven
+      run: mvn clean install -DskipTests
+
+    - name: Run Unit Tests
+      run: mvn test
+      env:
+        DB_URL: jdbc:mysql://localhost:3306/test_db
+        DB_USERNAME: root
+        DB_PASSWORD: testpassword
+
+    - name: Run Integration Tests
+      run: mvn verify -P integration-tests
+      continue-on-error: true
+
+    - name: Generate Test Report
+      run: mvn surefire-report:report
+
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: target/surefire-reports/
+
+    - name: Check Code Coverage
+      run: mvn jacoco:report
+      continue-on-error: true
+
+    - name: Build Docker Image
+      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+      run: |
+        docker build -t hospital-appointment:${{ github.sha }} .
+        docker tag hospital-appointment:${{ github.sha }} hospital-appointment:latest
+
+    - name: Security Scan
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+      continue-on-error: true
+
+    - name: Upload Security Scan Results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+      continue-on-error: true
+
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v3
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Run Checkstyle
+      run: mvn checkstyle:check
+      continue-on-error: true
+
+    - name: Run SpotBugs
+      run: mvn spotbugs:check
+      continue-on-error: true
+
+  deploy:
+    needs: [build-and-test, code-quality]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to Production
+      run: |
+        echo "Deployment steps would go here"
+        # Add your deployment commands
+        # e.g., SSH to server, pull latest code, restart service
+      continue-on-error: true
+
+    - name: Send Notification
+      if: success()
+      run: |
+        echo "Deployment successful! Notification would be sent here."
+        # Add notification logic (Slack, Email, etc.)
