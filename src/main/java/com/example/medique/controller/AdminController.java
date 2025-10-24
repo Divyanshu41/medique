@@ -1,14 +1,14 @@
-package com.example.myturn.controller;
+package com.example.medique.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.myturn.model.User;
-import com.example.myturn.model.view.DoctorView;
-import com.example.myturn.model.view.HospitalView;
-import com.example.myturn.model.view.AppointmentView;
-import com.example.myturn.repository.UserRepository;
+import com.example.medique.model.User;
+import com.example.medique.model.view.DoctorView;
+import com.example.medique.model.view.HospitalView;
+import com.example.medique.model.view.AppointmentView;
+import com.example.medique.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Controller

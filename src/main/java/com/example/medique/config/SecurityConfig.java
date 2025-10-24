@@ -1,7 +1,7 @@
-package com.example.myturn.config;
+package com.example.medique.config;
 
-import com.example.myturn.model.User;
-import com.example.myturn.repository.UserRepository;
+import com.example.medique.model.User;
+import com.example.medique.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

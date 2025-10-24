@@ -1,4 +1,4 @@
-package com.example.myturn.model.view;
+package com.example.medique.model.view;
 
 public class DoctorView {
     private Long id;

@@ -1,6 +1,6 @@
-package com.example.myturn.repository;
+package com.example.medique.repository;
 
-import com.example.myturn.model.User;
+import com.example.medique.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>medique-appointment</artifactId>
+	<artifactId>myturn-appointment</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>medique-appointment</name>
-	<description>Medique Appointment System with Role-based Dashboards</description>
+	<name>myturn-appointment</name>
+	<description>MyTurn Appointment System with Role-based Dashboards</description>
 	<url/>
 	<licenses>
 		<license/>

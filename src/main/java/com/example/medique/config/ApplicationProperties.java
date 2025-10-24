@@ -1,4 +1,4 @@
-package com.example.myturn.config;
+package com.example.medique.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

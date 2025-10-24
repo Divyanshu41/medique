@@ -1,4 +1,4 @@
-package com.example.myturn.model;
+package com.example.medique.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;

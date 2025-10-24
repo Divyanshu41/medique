@@ -1,4 +1,4 @@
-package com.example.myturn.config;
+package com.example.medique.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

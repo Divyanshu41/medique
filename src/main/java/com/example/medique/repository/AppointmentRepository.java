@@ -1,7 +1,7 @@
-package com.example.myturn.repository;
+package com.example.medique.repository;
 
-import com.example.myturn.model.Appointment;
-import com.example.myturn.model.User;
+import com.example.medique.model.Appointment;
+import com.example.medique.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
