@@ -54,7 +54,7 @@
                             <tr th:each="a : ${appointments}">
                                 <td th:text="${a.doctor != null ? a.doctor.name : ''}">Dr X</td>
                                 <td th:text="${a.doctor != null ? a.doctor.address : ''}">Specialization</td>
-                                <td th:text="${#dates.format(a.appointmentDate, 'dd-MMM-yyyy')}">2025-01-01</td>
+                                <td th:text="${a.appointmentDate}">2025-01-01</td>
                                 <td th:text="${a.timeSlot}">09:00</td>
                                 <td>
                                     <span th:if="${a.status == 'CONFIRMED'}" class="badge bg-success" th:text="${a.status}">CONFIRMED</span>
@@ -62,7 +62,7 @@
                                     <span th:if="${a.status == 'CANCELLED'}" class="badge bg-danger" th:text="${a.status}">CANCELLED</span>
                                     <span th:if="${a.status == 'COMPLETED'}" class="badge bg-primary" th:text="${a.status}">COMPLETED</span>
                                 </td>
-                                <td th:text="${#dates.format(a.createdAt, 'dd-MMM-yyyy HH:mm')}">Created</td>
+                                <td th:text="${a.createdAt}">Created</td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(appointments)}">
                                 <td colspan="6" class="text-center text-muted">
