@@ -4,10 +4,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.medique.model.Appointment;
 import com.example.medique.model.User;
 import com.example.medique.model.view.DoctorView;
 import com.example.medique.model.view.HospitalView;
 import com.example.medique.model.view.AppointmentView;
+import com.example.medique.repository.AppointmentRepository;
 import com.example.medique.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,12 +20,19 @@ public class AdminController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+
     @GetMapping("/dashboard")
     public String adminDashboard(Model model) {
-        // Simple admin dashboard counts (placeholder for now)
+        // Get actual counts from database
         Long doctorCount = userRepository.countByRole("DOCTOR");
+        Long patientCount = userRepository.countByRole("PATIENT");
+        Long appointmentCount = appointmentRepository.count();
+        
         model.addAttribute("doctorCount", doctorCount);
-        model.addAttribute("appointmentCount", 0);
+        model.addAttribute("patientCount", patientCount);
+        model.addAttribute("appointmentCount", appointmentCount);
         return "admin_dashboard";
     }
 
@@ -68,10 +77,32 @@ public class AdminController {
 
     @GetMapping("/appointments")
     public String listAppointments(Model model) {
-        // Placeholder: empty list for now
-        java.util.List<AppointmentView> appointments = new java.util.ArrayList<>();
+        System.out.println("🔍 ADMIN: Viewing all appointments");
+        
+        // Fetch all appointments from database
+        java.util.List<Appointment> appointments = appointmentRepository.findAll();
+        
+        System.out.println("✅ Found " + appointments.size() + " appointments");
+        
         model.addAttribute("appointments", appointments);
         return "admin_appointments";
+    }
+
+    @PostMapping("/appointments/update-status/{id}")
+    public String updateAppointmentStatus(@PathVariable Long id, 
+                                          @RequestParam String status) {
+        System.out.println("🔄 ADMIN: Updating appointment " + id + " status to " + status);
+        
+        Appointment appointment = appointmentRepository.findById(id).orElse(null);
+        if (appointment != null) {
+            appointment.setStatus(status);
+            appointmentRepository.save(appointment);
+            System.out.println("✅ Appointment status updated successfully");
+        } else {
+            System.out.println("❌ Appointment not found");
+        }
+        
+        return "redirect:/admin/appointments";
     }
 
     @GetMapping("/add-doctor")

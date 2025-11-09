@@ -83,17 +83,22 @@
                                         <tr th:each="appointment : ${appointments}" class="appointment-card">
                                             <td th:text="${appointment.id}">1</td>
                                             <td>
-                                                <strong th:text="${appointment.patientName}">John Doe</strong><br>
-                                                <small class="text-muted" th:text="${appointment.patientEmail}">john@example.com</small>
+                                                <strong th:text="${appointment.patient?.name}">John Doe</strong><br>
+                                                <small class="text-muted" th:text="${appointment.patient?.email}">john@example.com</small>
                                             </td>
-                                            <td th:text="${appointment.doctorName}">Dr. Smith</td>
+                                            <td>
+                                                <strong th:text="${appointment.doctor?.name}">Dr. Smith</strong><br>
+                                                <small class="text-muted" th:text="${appointment.doctor?.address}">Specialization</small>
+                                            </td>
                                             <td>
                                                 <i class="bi bi-calendar3"></i> 
                                                 <span th:text="${#temporals.format(appointment.appointmentDate, 'dd MMM yyyy')}">20 Oct 2025</span><br>
                                                 <i class="bi bi-clock"></i> 
-                                                <span th:text="${appointment.appointmentTime}">10:00 AM</span>
+                                                <span th:text="${appointment.timeSlot}">10:00 AM</span>
                                             </td>
-                                            <td th:text="${appointment.hospital?.name}">City Hospital</td>
+                                            <td>
+                                                <span class="text-muted">Medical Center</span>
+                                            </td>
                                             <td>
                                                 <span class="badge status-badge"
                                                       th:classappend="${appointment.status == 'CONFIRMED' ? 'bg-success' : 
