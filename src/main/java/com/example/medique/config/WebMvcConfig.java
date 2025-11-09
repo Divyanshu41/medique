@@ -32,7 +32,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Configure static resource caching
+     * Configure static resource cachingq
      */
     @Override
     public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
