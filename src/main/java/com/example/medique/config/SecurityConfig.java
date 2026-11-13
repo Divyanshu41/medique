@@ -2,7 +2,6 @@ package com.example.medique.config;
 
 import com.example.medique.model.User;
 import com.example.medique.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,32 +15,24 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    // Load users from DB
     @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> {
-            User user = userRepository.findByEmail(username)
+    public UserDetailsService userDetailsService(UserRepository users) {
+        return email -> {
+            User user = users.findByEmail(email)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-            return org.springframework.security.core.userdetails.User
-                    .withUsername(user.getEmail())
+            return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
                     .password(user.getPassword())
                     .roles(user.getRole())
+                    .disabled(!Boolean.TRUE.equals(user.getIsActive()))
                     .build();
         };
     }
 
-    // Encrypt passwords with BCrypt
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Required for authentication manager
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
@@ -49,28 +40,18 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/register", "/login", "/css/**", "/js/**").permitAll() // public pages
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .successHandler((request, response, authentication) -> {
-                            response.sendRedirect("/dashboard");
-                        })
-                        .permitAll())
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .permitAll())
-                .sessionManagement(session -> session
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(false)
-                        .expiredUrl("/login?expired"))
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")); // Enable CSRF protection
-
+        http.authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/user/**").hasRole("PATIENT")
+                    .anyRequest().authenticated())
+            .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/dashboard", true).permitAll())
+            .logout(logout -> logout.logoutSuccessUrl("/login?logout")
+                    .invalidateHttpSession(true).clearAuthentication(true)
+                    .deleteCookies("JSESSIONID").permitAll())
+            .sessionManagement(session -> session.sessionFixation(fixation -> fixation.migrateSession())
+                    .maximumSessions(1).maxSessionsPreventsLogin(false).expiredUrl("/login?expired"));
+        // CSRF protection remains enabled for browser forms.
         return http.build();
     }
 }

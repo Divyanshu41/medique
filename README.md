@@ -1,93 +1,70 @@
-# 🏥 Hospital Appointment Management System (Simplified)
+# Medique – Hospital Appointment Management System
 
-A minimal hospital appointment management system built with **Spring Boot 3**, featuring role-based dashboards for Admin and Users (Patients).
+A server-rendered hospital appointment application built with Java 21, Spring Boot 3.5, Spring Security, Spring Data JPA, MySQL, Thymeleaf and Bootstrap.
 
-![Java](https://img.shields.io/badge/Java-21-orange)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.4-brightgreen)
-![MySQL](https://img.shields.io/badge/MySQL-8.0+-blue)
-![License](https://img.shields.io/badge/License-Apache%202.0-blue)
+## Features
+- Patient registration and login with BCrypt password hashing
+- Role-protected admin and patient routes
+- Admin doctor and user management
+- Patient doctor directory and appointment booking
+- Appointment status management
+- Environment-based database configuration
+- GitHub Actions Maven verification workflow
 
-## ✨ Features
+> Learning project only. It has not been independently security-audited or load-tested. Do not store real patient/medical data in this demo.
 
-### 👤 User Features
-- ✅ User registration and login
-- ✅ Role-based dashboard access
+## Requirements
+- JDK 21
+- MySQL 8+
+- Git
 
-### 👨‍💼 Admin Features
-- ✅ Admin dashboard access
-- ✅ User management overview
+## Local setup
+1. Clone:
+   ```bash
+   git clone https://github.com/Divyanshu41/medique.git
+   cd medique
+   ```
+2. Create database:
+   ```sql
+   CREATE DATABASE new-hsrole_db;
+   ```
+3. Copy `.env.example` to `.env` as a reference and configure variables in your shell or IDE. Spring Boot does not automatically load a plain `.env` file.
 
-## 🛠 Tech Stack
+   PowerShell:
+   ```powershell
+   $env:DB_URL="jdbc:mysql://localhost:3306/new-hsrole_db"
+   $env:DB_USERNAME="root"
+   $env:DB_PASSWORD="your_local_password"
+   ```
 
-### Backend
-- **Java 21**
-- **Spring Boot 3.5.4**
-- **Spring Security** (Authentication & Authorization)
-- **Spring Data JPA** (ORM)
-- **MySQL** (Database)
+   Linux/macOS:
+   ```bash
+   export DB_URL='jdbc:mysql://localhost:3306/new-hsrole_db'
+   export DB_USERNAME='root'
+   export DB_PASSWORD='your_local_password'
+   ```
+4. Build and run:
+   ```bash
+   ./mvnw clean verify
+   ./mvnw spring-boot:run
+   ```
+   On Windows use `mvnw.cmd`.
+5. Open http://localhost:8080.
 
-### Frontend
-- **Thymeleaf** (Server-side rendering)
-- **HTML5/CSS3/JavaScript**
-- **Bootstrap 5** (UI Framework)
+## Configuration
+- `DB_URL`: JDBC URL
+- `DB_USERNAME`: database username
+- `DB_PASSWORD`: database password
+- `DDL_AUTO`: Hibernate schema mode (local default: update; production: validate)
+- `SERVER_PORT`: HTTP port (default 8080)
+- `SESSION_COOKIE_SECURE`: set true behind HTTPS
 
-## 📦 Prerequisites
+## Security
+- Never commit `.env`, credentials, API keys or patient data.
+- Rotate every credential previously committed to a public repository. Removing it from the latest commit does not erase Git history.
+- Use HTTPS and secure cookies in production.
+- Use database migrations and set `DDL_AUTO=validate` in production.
+- Do not use real patient records in this demo.
 
-- ☕ **Java 21** or higher
-- 🛢 **MySQL 8.0+**
-- 📦 **Maven 3.6+**
-
-## 🔧 Installation
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/Divyanshu41/medique.git
-cd medique
-```
-
-### 2. Setup MySQL Database
-Create a database named `new-hsrole_db` in MySQL.
-
-### 3. Configure Database
-Edit `src/main/resources/application.properties` with your MySQL credentials.
-
-### 4. Build the Project
-```bash
-mvnw clean package
-```
-
-## ▶️ Running the Application
-
-```bash
-java -jar target/medique-appointment-0.0.1-SNAPSHOT.jar
-```
-
-The application will start on **http://localhost:8080**
-
-## 📁 Project Structure
-
-```
-medique/
-├── src/main/java/com/example/medique/
-│   ├── controller/      # Controllers
-│   ├── model/           # JPA entities
-│   ├── repository/      # Data repositories
-│   ├── service/         # Business logic
-│   └── config/security  # Config and security
-├── src/main/resources/
-│   ├── templates/       # Thymeleaf templates
-│   └── application.properties
-├── pom.xml
-└── README.md
-```
-
-## 🔐 Default Users
-
-Create users manually in the database or via registration.
-
-## Support
-
-For issues, check the code — it's minimal and easy to understand.
-
----
-Note: This repository was renamed from an earlier structure; the project has been flattened and cleaned.
+## CI
+GitHub Actions runs Maven `clean verify` on pushes and pull requests to `main`. Automated production deployment is not configured.
