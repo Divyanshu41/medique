@@ -2,40 +2,48 @@ package com.example.medique.controller;
 
 import com.example.medique.model.User;
 import com.example.medique.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AuthController {
+    private final UserRepository users;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserRepository userRepository;
+    public AuthController(UserRepository users, PasswordEncoder passwordEncoder) {
+        this.users = users;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    // Show register page
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User());
         return "register";
     }
 
-    // Handle register form
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user) {
+    public String registerUser(@Valid @ModelAttribute("user") User user,
+                               BindingResult result) {
+        if (users.existsByEmail(user.getEmail())) {
+            result.rejectValue("email", "duplicate", "This email is already registered");
+        }
+        if (result.hasErrors()) return "register";
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("PATIENT");
-        userRepository.save(user);
-        return "redirect:/login";
+        user.setIsActive(true);
+        users.save(user);
+        return "redirect:/login?registered";
     }
 
-    // Show login page
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String showLoginForm(@RequestParam(required = false) String error,
+                                @RequestParam(required = false) String logout, Model model) {
+        if (error != null) model.addAttribute("loginError", "Invalid email or password.");
+        if (logout != null) model.addAttribute("logoutMessage", "You have been logged out.");
         return "login";
     }
 }
