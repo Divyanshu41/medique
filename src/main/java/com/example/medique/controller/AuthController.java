@@ -26,15 +26,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@Valid @ModelAttribute("user") User user,
-                               BindingResult result) {
+    public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult result) {
+        // Public registration can only create patient accounts.
+        user.setRole("PATIENT");
+        user.setIsActive(true);
         if (users.existsByEmail(user.getEmail())) {
             result.rejectValue("email", "duplicate", "This email is already registered");
         }
         if (result.hasErrors()) return "register";
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole("PATIENT");
-        user.setIsActive(true);
         users.save(user);
         return "redirect:/login?registered";
     }

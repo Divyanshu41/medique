@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +78,7 @@ public class UserController {
             appointmentService.book(patient, doctorId, LocalDate.parse(date), slot);
             redirect.addFlashAttribute("success", "Appointment booked successfully!");
             return "redirect:/user/appointments";
-        } catch (DateTimeParseException | IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             redirect.addFlashAttribute("error", ex.getMessage());
             return "redirect:/user/book-appointment/" + doctorId;
         }
