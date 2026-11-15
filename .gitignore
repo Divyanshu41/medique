@@ -1,0 +1,25 @@
+target/
+.env
+.env.*
+!.env.example
+logs/
+*.log
+*.gz
+*.tmp
+*.temp
+*~
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+.factorypath
+.sts4-cache/
+build/
+dist/
+
+# Local embedded H2 database files
+medique-data*

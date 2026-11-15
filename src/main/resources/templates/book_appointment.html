@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Book Appointment | Medique</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-5">
+    <div class="card shadow-sm mx-auto" style="max-width: 620px;">
+        <div class="card-body p-4">
+            <h1 class="h3 mb-1">Book Appointment</h1>
+            <p class="text-muted mb-4">Choose a date to see this doctor's available one-hour slots.</p>
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+            <form method="post" th:action="@{/user/book-appointment/{doctorId}(doctorId=${doctorId})}" id="bookingForm">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <div class="mb-3">
+                    <label for="date" class="form-label">Appointment Date</label>
+                    <input type="date" id="date" name="date" class="form-control" th:attr="min=${minDate}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="slot" class="form-label">Available time slot</label>
+                    <select id="slot" name="slot" class="form-select" required disabled>
+                        <option value="">Select a date first</option>
+                    </select>
+                    <div id="slotMessage" class="form-text" role="status">Available slots will appear after you choose a date.</div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success" id="bookButton" disabled>Request Appointment</button>
+                    <a th:href="@{/user/doctors}" class="btn btn-outline-secondary">Back to doctors</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="bookingConfig"
+     th:attr="data-doctor-id=${doctorId},data-slots-url=@{/user/doctors/{id}/available-slots(id=${doctorId})}"></div>
+<script>
+(() => {
+    const config = document.getElementById('bookingConfig');
+    const dateInput = document.getElementById('date');
+    const slotSelect = document.getElementById('slot');
+    const message = document.getElementById('slotMessage');
+    const bookButton = document.getElementById('bookButton');
+
+    dateInput.addEventListener('change', async () => {
+        slotSelect.innerHTML = '<option value="">Loading slots...</option>';
+        slotSelect.disabled = true;
+        bookButton.disabled = true;
+        message.textContent = 'Checking doctor availability...';
+
+        if (!dateInput.value) {
+            slotSelect.innerHTML = '<option value="">Select a date first</option>';
+            message.textContent = 'Available slots will appear after you choose a date.';
+            return;
+        }
+
+        try {
+            const url = config.dataset.slotsUrl + '?date=' + encodeURIComponent(dateInput.value);
+            const response = await fetch(url, { headers: { 'Accept': 'application/json' } });
+            if (!response.ok) throw new Error('Unable to load slots. Please refresh and try again.');
+            const slots = await response.json();
+
+            slotSelect.innerHTML = '';
+            if (!Array.isArray(slots) || slots.length === 0) {
+                slotSelect.innerHTML = '<option value="">No slots available</option>';
+                message.textContent = 'This doctor has no available slots on the selected date.';
+                return;
+            }
+
+            slotSelect.appendChild(new Option('Choose a time', ''));
+            slots.forEach(slot => slotSelect.appendChild(new Option(slot, slot)));
+            slotSelect.disabled = false;
+            message.textContent = slots.length + ' slot(s) available. Each appointment is 60 minutes.';
+        } catch (error) {
+            slotSelect.innerHTML = '<option value="">Could not load slots</option>';
+            message.textContent = error.message;
+        }
+    });
+
+    slotSelect.addEventListener('change', () => {
+        bookButton.disabled = !slotSelect.value;
+    });
+})();
+</script>
+</body>
+</html>

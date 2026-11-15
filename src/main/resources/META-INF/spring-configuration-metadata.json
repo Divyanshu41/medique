@@ -1,0 +1,48 @@
+{
+    "properties": [{
+            "name": "app.twilio.account-sid",
+            "type": "java.lang.String",
+            "description": "Twilio account SID for SMS OTP service."
+        },
+        {
+            "name": "app.twilio.auth-token",
+            "type": "java.lang.String",
+            "description": "Twilio authentication token."
+        },
+        {
+            "name": "app.twilio.phone-number",
+            "type": "java.lang.String",
+            "description": "Twilio phone number for sending SMS."
+        },
+        {
+            "name": "app.webauthn.rp.id",
+            "type": "java.lang.String",
+            "description": "WebAuthn Relying Party ID."
+        },
+        {
+            "name": "app.webauthn.rp.name",
+            "type": "java.lang.String",
+            "description": "WebAuthn Relying Party name."
+        },
+        {
+            "name": "app.webauthn.rp.origin",
+            "type": "java.lang.String",
+            "description": "WebAuthn Relying Party origin URL."
+        },
+        {
+            "name": "app.file.upload-dir",
+            "type": "java.lang.String",
+            "description": "Directory for uploaded files."
+        },
+        {
+            "name": "app.razorpay.key.id",
+            "type": "java.lang.String",
+            "description": "Razorpay API key ID for payment processing."
+        },
+        {
+            "name": "app.razorpay.key.secret",
+            "type": "java.lang.String",
+            "description": "Razorpay API key secret."
+        }
+    ]
+}

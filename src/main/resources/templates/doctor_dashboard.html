@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doctor Dashboard | Medique</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div><h1 class="h3 mb-1">Doctor Dashboard</h1><p class="text-muted mb-0" th:text="'Welcome, Dr. ' + ${user.name}">Welcome, Doctor</p></div>
+        <form th:action="@{/logout}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button class="btn btn-outline-secondary" type="submit">Logout</button>
+        </form>
+    </div>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <section class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="h5">Weekly availability</h2>
+            <p class="text-muted small">Set your regular working hours. Each appointment slot is 60 minutes. Break time is optional.</p>
+            <form th:action="@{/doctor/availability}" method="post" class="row g-3 align-items-end">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <div class="col-md-3">
+                    <label for="dayOfWeek" class="form-label">Weekday</label>
+                    <select id="dayOfWeek" name="dayOfWeek" class="form-select" required>
+                        <option value="">Choose day</option>
+                        <option value="MONDAY">Monday</option><option value="TUESDAY">Tuesday</option>
+                        <option value="WEDNESDAY">Wednesday</option><option value="THURSDAY">Thursday</option>
+                        <option value="FRIDAY">Friday</option><option value="SATURDAY">Saturday</option>
+                        <option value="SUNDAY">Sunday</option>
+                    </select>
+                </div>
+                <div class="col-md-2"><label for="startTime" class="form-label">Start</label><input id="startTime" name="startTime" type="time" class="form-control" required></div>
+                <div class="col-md-2"><label for="endTime" class="form-label">End</label><input id="endTime" name="endTime" type="time" class="form-control" required></div>
+                <div class="col-md-2"><label for="breakStart" class="form-label">Break start</label><input id="breakStart" name="breakStart" type="time" class="form-control"></div>
+                <div class="col-md-2"><label for="breakEnd" class="form-label">Break end</label><input id="breakEnd" name="breakEnd" type="time" class="form-control"></div>
+                <div class="col-md-1"><button class="btn btn-primary w-100" type="submit">Save</button></div>
+            </form>
+            <hr>
+            <h3 class="h6">Saved weekly hours</h3>
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead><tr><th>Day</th><th>Working hours</th><th>Break</th><th></th></tr></thead>
+                    <tbody>
+                    <tr th:each="s : ${weeklySchedules}">
+                        <td th:text="${s.dayOfWeek}">MONDAY</td>
+                        <td><span th:text="${s.startTime}">09:00</span> - <span th:text="${s.endTime}">17:00</span></td>
+                        <td th:if="${s.breakStart != null}"><span th:text="${s.breakStart}">13:00</span> - <span th:text="${s.breakEnd}">14:00</span></td>
+                        <td th:unless="${s.breakStart != null}">—</td>
+                        <td>
+                            <form th:action="@{/doctor/availability/{id}/delete(id=${s.id})}" method="post">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(weeklySchedules)}"><td colspan="4" class="text-muted">No weekly hours added yet. Patients cannot book until a schedule is set.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="h5">Date-wise leave</h2>
+            <p class="text-muted small">Add a day off. A leave cannot be added when non-cancelled appointments already exist on that date.</p>
+            <form th:action="@{/doctor/leaves}" method="post" class="row g-3 align-items-end mb-3">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <div class="col-md-4"><label for="leaveDate" class="form-label">Date</label><input type="date" id="leaveDate" name="leaveDate" th:attr="min=${today}" class="form-control" required></div>
+                <div class="col-md-6"><label for="reason" class="form-label">Reason (optional)</label><input type="text" id="reason" name="reason" maxlength="250" class="form-control" placeholder="Personal leave, conference, etc."></div>
+                <div class="col-md-2"><button class="btn btn-primary" type="submit">Add leave</button></div>
+            </form>
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead><tr><th>Date</th><th>Reason</th><th></th></tr></thead>
+                    <tbody>
+                    <tr th:each="leave : ${upcomingLeaves}">
+                        <td th:text="${leave.leaveDate}">2026-11-30</td>
+                        <td th:text="${leave.reason != null ? leave.reason : '—'}">Personal leave</td>
+                        <td>
+                            <form th:action="@{/doctor/leaves/{id}/delete(id=${leave.id})}" method="post">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(upcomingLeaves)}"><td colspan="3" class="text-muted">No upcoming leave dates.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="h5 mb-3">Your appointments</h2>
+            <div class="table-responsive"><table class="table table-hover align-middle">
+                <thead><tr><th>Patient</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody>
+                <tr th:each="a : ${appointments}">
+                    <td th:text="${a.patient.name}">Patient</td><td th:text="${a.appointmentDate}">Date</td><td th:text="${a.timeSlot}">Time</td>
+                    <td><span class="badge text-bg-secondary" th:text="${a.status}">PENDING</span></td><td>
+                    <div class="d-flex flex-wrap gap-2" th:if="${a.status == 'PENDING' or a.status == 'CONFIRMED'}">
+                        <form th:action="@{/doctor/appointments/{id}/status(id=${a.id})}" method="post" th:if="${a.status == 'PENDING'}">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><input type="hidden" name="status" value="CONFIRMED"><button class="btn btn-sm btn-success" type="submit">Confirm</button>
+                        </form>
+                        <form th:action="@{/doctor/appointments/{id}/status(id=${a.id})}" method="post" th:if="${a.status == 'CONFIRMED'}">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><input type="hidden" name="status" value="COMPLETED"><button class="btn btn-sm btn-primary" type="submit">Complete</button>
+                        </form>
+                        <form th:action="@{/doctor/appointments/{id}/status(id=${a.id})}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><input type="hidden" name="status" value="CANCELLED"><button class="btn btn-sm btn-outline-danger" type="submit">Cancel</button>
+                        </form>
+                    </div><span th:if="${a.status == 'CANCELLED' or a.status == 'COMPLETED'}" class="text-muted small">No actions</span></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(appointments)}"><td colspan="5" class="text-center text-muted py-4">No appointments assigned yet.</td></tr>
+                </tbody>
+            </table></div>
+        </div>
+    </section>
+</div>
+</body>
+</html>
